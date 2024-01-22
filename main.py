@@ -1,6 +1,5 @@
 import argparse
 from seq2seq_distill_trainer import Seq2SeqDistillTrainer
-from utils import load_teacher_model, load_student_model, load_tokenizer, load_distill_dataset
 
 if __name__ == '__main__':
     # Create the parser

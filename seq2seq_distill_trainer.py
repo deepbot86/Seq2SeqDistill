@@ -22,8 +22,8 @@ class Seq2SeqDistillTrainer:
         self.max_length = args.max_length
         self.num_train_epochs = args.epochs
         self.batch_size = args.batch_size
-        self.per_device_train_batch_size = args.per_device_train_batch_size
-        self.per_device_eval_batch_size = args.per_device_eval_batch_size
+        self.per_device_train_batch_size = args.batch_size
+        self.per_device_eval_batch_size = args.batch_size
         self.evaluation_strategy = "steps"
         self.save_strategy = "no",
         self.optim = args.optimizer,
@@ -43,35 +43,33 @@ class Seq2SeqDistillTrainer:
         # load dataset
         self.train_dataset, self.validation_dataset = load_distill_dataset(args.dataset, args.dataset_local_path, args.dataset_data_type)
 
-        
+
+        # tokenizer dataset function
+        # using closure for tokenizer since we would be using this function in generator and not in map function
+        def preprocess_function(sample):
+            """given input text dataset and tokenizer, tokenizer the text data for model training
+                params:
+                sample: text dataset element tp be tokenized
+                tokenizer: AutoTokenizer - huggingface tokenizer object
+                max_length: int - max sequence length
+                padding - padding strategy, pad to max length 
+                input_col_name: str - column with input data to model
+                output_col_name: str - column with correct spelling label
+            return - tokenized Dataset
+            """
+
+            # tokenize inputs
+            model_inputs = self.tokenizer(sample[self.input_col_name], max_length=self.max_length, padding="max_length", truncation=True)
+
+            # tokenize labels/targets with the `text_target` keyword argument
+            labels = self.tokenizer(text_target=sample[self.target_col_name], max_length=self.max_length, padding="max_length", truncation=True)
+
+            model_inputs["labels"] = labels["input_ids"]
+            return model_inputs
+
         # adding generator for dataset tokenization, it will be performed on the fly at the time of training
-        self.train_dataset.set_transform(self.preprocess_function)
-        self.validation_dataset.set_transform(self.preprocess_function)
-
-
-    # tokenizer dataset function
-    # using closure for tokenizer since we would be using this function in generator and not in map function
-    def preprocess_function(self, 
-                            sample):
-        """given input text dataset and tokenizer, tokenizer the text data for model training
-            params:
-            sample: text dataset element tp be tokenized
-            tokenizer: AutoTokenizer - huggingface tokenizer object
-            max_length: int - max sequence length
-            padding - padding strategy, pad to max length 
-            input_col_name: str - column with input data to model
-            output_col_name: str - column with correct spelling label
-        return - tokenized Dataset
-        """
-
-        # tokenize inputs
-        model_inputs = self.tokenizer(sample[self.input_col_name], max_length=self.max_length, padding="max_length", truncation=True)
-
-        # tokenize labels/targets with the `text_target` keyword argument
-        labels = self.tokenizer(text_target=sample[self.target_col_name], max_length=self.max_length, padding="max_length", truncation=True)
-
-        model_inputs["labels"] = labels["input_ids"]
-        return model_inputs
+        self.train_dataset.set_transform(preprocess_function)
+        self.validation_dataset.set_transform(preprocess_function)
         
 
     def train(self):

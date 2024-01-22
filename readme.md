@@ -68,7 +68,7 @@ Here are some examples:
 # For distributed training using torchrun 
 e.g. running the code on ml.p3.16xlarge instance that has 8 V100 GPUs, NUM_GPUS_YOU_HAVE should be set to 8
     
-    torchrun --nproc_per_node=NUM_GPUS_YOU_HAVE main.py --model-type bart --teacher facebook/bart-base  --dataset samsum --dataset-input-column source --dataset-target-column target --output-dir /path/to/output/dir
+    torchrun --nproc_per_node=NUM_GPUS_YOU_HAVE main.py --model-type bart --teacher facebook/bart-base  --dataset samsum --dataset-input-column dialogue --dataset-target-column summary --output-dir /path/to/output/dir
 
 ## Dependencies
 

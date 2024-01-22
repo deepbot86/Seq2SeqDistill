@@ -37,11 +37,12 @@ class Seq2SeqDistillTrainer:
         # load teacher model
         self.teacher_model = load_teacher_model(args.model_type, args.teacher_local_path, args.teacher)
         # load dataset
-        self.dataset = load_distill_dataset(args.dataset, args.dataset_local_path, args.dataset_data_type)
+        self.train_dataset, self.validation_dataset = load_distill_dataset(args.dataset, args.dataset_local_path, args.dataset_data_type)
 
         
         # adding generator for dataset tokenization, it will be performed on the fly at the time of training
-        self.dataset.set_transform(self.preprocess_function)
+        self.train_dataset.set_transform(self.preprocess_function)
+        self.validation_dataset.set_transform(self.preprocess_function)
 
 
     # tokenizer dataset function
@@ -104,8 +105,8 @@ class Seq2SeqDistillTrainer:
         trainer = DistillationTrainer(
             model=self.student_model, # the instantiated 🤗 Transformers model to be trained
             args=distill_training_args, # training arguments, defined above
-            train_dataset=self.dataset["train"], # training dataset
-            eval_dataset=self.dataset["validation"], # evaluation dataset
+            train_dataset=self.train_dataset, # training dataset
+            eval_dataset=self.validation_dataset, # evaluation dataset
             data_collator=seq2seq_data_collator,
             teacher_model=self.teacher_model
         )

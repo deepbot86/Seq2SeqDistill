@@ -77,7 +77,8 @@ def load_distill_dataset(dataset_name: str, local_path: str, dataset_data_type: 
             raise ValueError('dataset_name or dataset_local_path must be provided') 
         
         # split dataset into train and validation
-        train_dataset = dataset['train'].train_test_split(test_size=0.1, shuffle=True)
-        train_dataset = train_dataset['train']
-        val_dataset = train_dataset['test']
+        split_dataset = dataset['train'].train_test_split(test_size=0.1, shuffle=True)
+        print(split_dataset)
+        train_dataset = split_dataset['train']
+        val_dataset = split_dataset['test']
         return train_dataset, val_dataset

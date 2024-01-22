@@ -11,9 +11,9 @@ Weighted Loss Function
 
 ## Installation
 
-    pip install distillseq2seq
+    pip install seq2seqdistill
 
-    >>>from distillseq2seq.seq2seq_distill_trainer import Seq2SeqDistillTrainer
+    >>>from seq2seqdistill.seq2seq_distill_trainer import Seq2SeqDistillTrainer
     >>>training_args = {}
     >>>training_args["model_type"] = "bart"
     >>>training_args["teacher"] = "facebook/bart-base"

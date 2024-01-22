@@ -17,9 +17,13 @@ class Seq2SeqDistillTrainer:
         else:
             ValueError("model_type must be bart or t5")
         self.output_dir = args.output_dir
+        self.input_col_name = args.dataset_input_column
+        self.target_col_name = args.dataset_target_column
+        self.max_length = args.max_length
         self.num_train_epochs = args.epochs
-        self.per_device_train_batch_size = args.batch_size
-        self.per_device_eval_batch_size = args.batch_size
+        self.batch_size = args.batch_size
+        self.per_device_train_batch_size = args.per_device_train_batch_size
+        self.per_device_eval_batch_size = args.per_device_eval_batch_size
         self.evaluation_strategy = "steps"
         self.save_strategy = "no",
         self.optim = args.optimizer,
@@ -48,11 +52,7 @@ class Seq2SeqDistillTrainer:
     # tokenizer dataset function
     # using closure for tokenizer since we would be using this function in generator and not in map function
     def preprocess_function(self, 
-                            sample,
-                        max_length: int,
-                        input_col_name: str,
-                        target_col_name: str,
-                        padding: str="max_length"):
+                            sample):
         """given input text dataset and tokenizer, tokenizer the text data for model training
             params:
             sample: text dataset element tp be tokenized
@@ -65,10 +65,10 @@ class Seq2SeqDistillTrainer:
         """
 
         # tokenize inputs
-        model_inputs = self.tokenizer(sample[input_col_name], max_length=max_length, padding=padding, truncation=True)
+        model_inputs = self.tokenizer(sample[self.input_col_name], max_length=self.max_length, padding="max_length", truncation=True)
 
         # tokenize labels/targets with the `text_target` keyword argument
-        labels = self.tokenizer(text_target=sample[target_col_name], max_length=max_length, padding=padding, truncation=True)
+        labels = self.tokenizer(text_target=sample[self.target_col_name], max_length=self.max_length, padding="max_length", truncation=True)
 
         model_inputs["labels"] = labels["input_ids"]
         return model_inputs
@@ -79,7 +79,7 @@ class Seq2SeqDistillTrainer:
         # set training arguments
         distill_training_args = DistillationTrainingArguments(
             output_dir=self.output_dir, # output directory
-            num_train_epochs=self.epochs, # total number of training epochs
+            num_train_epochs=self.num_train_epochs, # total number of training epochs
             per_device_train_batch_size=self.batch_size, # batch size per device during training
             per_device_eval_batch_size=self.batch_size, # batch size for evaluation
             warmup_steps=500, # number of warmup steps for learning rate scheduler
@@ -102,7 +102,7 @@ class Seq2SeqDistillTrainer:
         seq2seq_data_collator = DataCollatorForSeq2Seq(self.tokenizer, model=self.student_model, return_tensors = "pt")
 
         # instantiate trainer
-        trainer = DistillationTrainer(
+        self.trainer = DistillationTrainer(
             model=self.student_model, # the instantiated 🤗 Transformers model to be trained
             args=distill_training_args, # training arguments, defined above
             train_dataset=self.train_dataset, # training dataset

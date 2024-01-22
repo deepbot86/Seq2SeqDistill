@@ -43,7 +43,7 @@ Please note that if you are using a custom trained model, you should provide the
 
 ## How to Run
 
-The main script for this project is Seq2SeqDistill/main.py. You can run this script from the command line with various arguments to specify the details of the distillation process.
+The main script for this project is Seq2SeqDistill/main.py. You can run this script from the command line with various arguments to specify the details of the distillation process. This script ha sbeen tested on samsum dataset for finetuning BART Base model on an AWS ml.p3.24xlarge instance (8 V100 GPUs) using torchrun. The distilled student model had 3 encoder and 3 decoder layers.  
 
 Here are some examples:
 
@@ -62,7 +62,7 @@ Here are some examples:
     python main.py --model-type t5 --teacher-local-path /path/to/teacher/model --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 32128 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path /path/to/dataset --output-dir ./distilled_model
 
 ### Distilling a custom trained BART model with custom trained tokenizer
-    python main.py --model-type bart --teacher facebook/bart-base --teacher-local-path /path/to/teacher/model --custom-tokenizer-local-path /path/to/custom/tokenizer --dataset samsum --dataset-input-column source --dataset-target-column target --output-dir /path/to/output/dir
+    python main.py --model-type bart --teacher facebook/bart-base --teacher-local-path /path/to/teacher/model --custom-tokenizer-local-path /path/to/custom/tokenizer --dataset samsum --dataset-input-column dialogue --dataset-target-column summary --output-dir /path/to/output/dir
 
 
 # For distributed training using torchrun 

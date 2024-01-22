@@ -28,7 +28,7 @@ class DistillationTrainer(Trainer):
         student_loss=outputs_student.loss
         # compute teacher output
         with torch.no_grad():
-          outputs_teacher = self.teacher(**inputs)
+            outputs_teacher = self.teacher(**inputs)
 
         # assert size
         assert outputs_student.logits.size() == outputs_teacher.logits.size()

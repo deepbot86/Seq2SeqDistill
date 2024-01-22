@@ -1,5 +1,5 @@
 import argparse
-from seq2seq_distill_trainer import Seq2SeqDistillTrainer
+from src.seq2seqdistill.seq2seq_distill_trainer import Seq2SeqDistillTrainer
 
 if __name__ == '__main__':
     # Create the parser

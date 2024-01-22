@@ -13,17 +13,17 @@ Weighted Loss Function
 
     pip install seq2seqdistill
 
-    >>>from seq2seqdistill.seq2seq_distill_trainer import Seq2SeqDistillTrainer
-    >>>training_args = {}
-    >>>training_args["model_type"] = "bart"
-    >>>training_args["teacher"] = "facebook/bart-base"
-    >>>training_args["dataset"] = "dataset"
-    >>>training_args["dataset"] = "samsum"
-    >>>training_args["dataset_input_column"] = "dialogue"
-    >>>training_args["dataset_target_column"] = "summary"
-    >>>training_args["output_dir"] = "distilled_bart_model_test"
-    >>>distiller = Seq2SeqDistillTrainer(training_args)
-    >>>distiller.train()
+    from seq2seqdistill.seq2seq_distill_trainer import Seq2SeqDistillTrainer
+    training_args = {}
+    training_args["model_type"] = "bart"
+    training_args["teacher"] = "facebook/bart-base"
+    training_args["dataset"] = "dataset"
+    training_args["dataset"] = "samsum"
+    training_args["dataset_input_column"] = "dialogue"
+    training_args["dataset_target_column"] = "summary"
+    training_args["output_dir"] = "distilled_bart_model_test"
+    distiller = Seq2SeqDistillTrainer(training_args)
+    distiller.train()
 
 ## Arguments
 

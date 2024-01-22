@@ -9,6 +9,13 @@ from utils import load_teacher_model, load_student_model, load_tokenizer, load_d
 
 class Seq2SeqDistillTrainer:
     def __init__(self, args):
+        self.model_type = args.model_type
+        if self.model_type == "bart":
+            self.optimizer = "adamw_torch"
+        elif self.model_type == "t5":
+            self.optimizer = "adafactor"
+        else:
+            ValueError("model_type must be bart or t5")
         self.output_dir = args.output_dir
         self.num_train_epochs = args.epochs
         self.per_device_train_batch_size = args.batch_size
@@ -26,7 +33,7 @@ class Seq2SeqDistillTrainer:
         self.tokenizer = load_tokenizer(args.model_type, args.custom_tokenizer_local_path, args.teacher)
         self.vocab_size = self.tokenizer.vocab_size
         # load student model
-        self.student_model = load_student_model(args.model_type, args.student_local_path, args.num_encoder_layers, args.num_decoder_layers, args.hidden_dim, self.vocab_size)
+        self.student_model = load_student_model(args.model_type, args.num_encoder_layers, args.num_decoder_layers, args.hidden_dim, self.vocab_size)
         # load teacher model
         self.teacher_model = load_teacher_model(args.model_type, args.teacher_local_path, args.teacher)
         # load dataset

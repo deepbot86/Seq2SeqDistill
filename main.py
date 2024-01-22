@@ -28,7 +28,7 @@ if __name__ == '__main__':
     parser.add_argument('--seed', type=int, default=42, help='random seed for training')
     parser.add_argument('--log-interval', type=int, default=10, help='log interval for training')
     parser.add_argument('--gradient-accumulation', type=bool, default=True, help='gradient accumulation for training')
-    parser.add_argument('optimizer', type=str, default='adamw_torch', help='optimizer for training')
+    parser.add_argument('--optimizer', type=str, default='adamw_torch', help='optimizer for training')
     # Parse the arguments
     args = parser.parse_args()
     seq2seq_trainer = Seq2SeqDistillTrainer(args)

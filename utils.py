@@ -21,37 +21,30 @@ def load_teacher_model(model_type: str, local_path: str, model_name: str) -> Bar
         raise ValueError('model_type must be bart or t5')
     return model
 
-def load_student_model(model_type: str, local_path: str, num_encoder_layers: str, num_decoder_layers:str, hidden_dim:int, vocab_size:str) -> BartForConditionalGeneration or T5ForConditionalGeneration:
+def load_student_model(model_type: str, num_encoder_layers: str, num_decoder_layers:str, hidden_dim:int, vocab_size:str) -> BartForConditionalGeneration or T5ForConditionalGeneration:
     if model_type == 'bart':
-        #check if local path is provided
-        if local_path:
-            student_model = BartForConditionalGeneration.from_pretrained(local_path)
-        else:
-            # load bart config
-            # Define the configuration
-            bart_config = BartConfig(
-                d_model=hidden_dim,  # dimensions of the model
-                encoder_layers=num_encoder_layers,  # number of encoder layers
-                decoder_layers=num_decoder_layers,  # number of decoder layers
-                vocab_size=vocab_size,  # vocabulary size
-            )
-            # Create the bart model from the configuration
-            student_model = BartForConditionalGeneration(bart_config)
+        # load bart config
+        # Define the configuration
+        bart_config = BartConfig(
+            d_model=hidden_dim,  # dimensions of the model
+            encoder_layers=num_encoder_layers,  # number of encoder layers
+            decoder_layers=num_decoder_layers,  # number of decoder layers
+            vocab_size=vocab_size,  # vocabulary size
+        )
+        # Create the bart model from the configuration
+        student_model = BartForConditionalGeneration(bart_config)
 
     elif model_type == 't5':
-        if local_path:
-            student_model = T5ForConditionalGeneration.from_pretrained(local_path)
-        else:
-            # load t5 config
-            # Define the configuration
-            t5_config = T5Config(
-                d_model=hidden_dim,  # dimensions of the model
-                encoder_layers=num_encoder_layers,  # number of encoder layers
-                decoder_layers=num_decoder_layers,  # number of decoder layers
-                vocab_size=vocab_size,  # vocabulary size
-            )
-            # Create the t5 model from the configuration
-            student_model = T5ForConditionalGeneration(t5_config)
+        # load t5 config
+        # Define the configuration
+        t5_config = T5Config(
+            d_model=hidden_dim,  # dimensions of the model
+            encoder_layers=num_encoder_layers,  # number of encoder layers
+            decoder_layers=num_decoder_layers,  # number of decoder layers
+            vocab_size=vocab_size,  # vocabulary size
+        )
+        # Create the t5 model from the configuration
+        student_model = T5ForConditionalGeneration(t5_config)
     else:
         raise ValueError('model_type must be bart or t5')
     return student_model

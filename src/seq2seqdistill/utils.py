@@ -2,7 +2,6 @@ from transformers import AutoTokenizer
 from transformers import BartForConditionalGeneration, T5ForConditionalGeneration
 from transformers import BartConfig, T5Config
 from datasets import load_dataset
-from src.distillseq2seq.distill import DistillationTrainingArguments, DistillationTrainer
 from transformers import DataCollatorForSeq2Seq
 
 def load_teacher_model(model_type: str, local_path: str, model_name: str) -> BartForConditionalGeneration or T5ForConditionalGeneration:

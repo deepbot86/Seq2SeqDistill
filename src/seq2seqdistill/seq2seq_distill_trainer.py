@@ -2,9 +2,9 @@ from transformers import AutoTokenizer
 from transformers import BartForConditionalGeneration, T5ForConditionalGeneration
 from transformers import BartConfig, T5Config
 from datasets import load_dataset
-from src.distillseq2seq.distill import DistillationTrainingArguments, DistillationTrainer
+from distill import DistillationTrainingArguments, DistillationTrainer
 from transformers import DataCollatorForSeq2Seq
-from src.distillseq2seq.utils import load_teacher_model, load_student_model, load_tokenizer, load_distill_dataset
+from utils import load_teacher_model, load_student_model, load_tokenizer, load_distill_dataset
 
 
 class Seq2SeqDistillTrainer:

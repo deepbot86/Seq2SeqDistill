@@ -1,4 +1,4 @@
-#### Task Specific Seq2Seq Model Distillation
+# Task Specific Seq2Seq Model Distillation
 
 This project is designed for Task Specific distillation of large Seq2Seq models like BART or T5 into smaller, more efficient models. The distilled models retain much of the performance of the original models while being faster and more memory efficient. The project supports distillation of both custom trained local checkpoints and pretrained checkpoints from Hugging Face.
 
@@ -9,34 +9,33 @@ The loss function used for distillation is a combination of Cross Entropy loss a
 Weighted Loss Function 
     loss = alpha * student_loss + (1 - alpha) * kl_divergence_loss
 
-### How to Run
+## How to Run
 
 The main script for this project is Seq2SeqDistill/main.py. You can run this script from the command line with various arguments to specify the details of the distillation process.
 
 Here are some examples:
 
-## Distilling a BART model from Hugging Face
-    python main.py --model-type bart --teacher facebook/bart-base --teacher-local-path None --student-local-path None --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 50265 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path None --output-dir ./distilled_model
+### Distilling a BART model from Hugging Face
+    python main.py --model-type bart --teacher facebook/bart-base --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 50265 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path None --output-dir ./distilled_model
 
-## Distilling a T5 model from Hugging Face
-    python main.py --model-type t5 --teacher t5-base --teacher-local-path None --student-local-path None --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 32128 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path None --output-dir ./distilled_model
+### Distilling a T5 model from Hugging Face
+    python main.py --model-type t5 --teacher t5-base --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 32128 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path None --output-dir ./distilled_model
 
-## Distilling a custom trained BART model
+### Distilling a custom trained BART model
 
-    python main.py --model-type bart --teacher None --teacher-local-path /path/to/teacher/model --student-local-path /path/to/student/model --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 50265 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path /path/to/dataset --output-dir ./distilled_model
+    python main.py --model-type bart --teacher-local-path /path/to/teacher/model --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 50265 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path /path/to/dataset --output-dir ./distilled_model
 
-## Distilling a custom trained T5 model
+### Distilling a custom trained T5 model
 
-    python main.py --model-type t5 --teacher None --teacher-local-path /path/to/teacher/model --student-local-path /path/to/student/model --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 32128 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path /path/to/dataset --output-dir ./distilled_model
+    python main.py --model-type t5 --teacher-local-path /path/to/teacher/model --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 32128 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path /path/to/dataset --output-dir ./distilled_model
 
-### Arguments
+## Arguments
 
 Here is a brief explanation of the arguments:
 
 --model-type: The type of the model. Currently, only 'bart' and 't5' are supported.
 --teacher: The Hugging Face model name of the teacher model.
 --teacher-local-path: The local path of the teacher model.
---student-local-path: The local path of the student model.
 --num-encoder-layers: The number of encoder layers in the student model.
 --num-decoder-layers: The number of decoder layers in the student model.
 --hidden-dim: The hidden dimensions of the student model.
@@ -49,6 +48,10 @@ Here is a brief explanation of the arguments:
 
 Please note that if you are using a custom trained model, you should provide the local path of the model and set the corresponding Hugging Face model name to None. Similarly, if you are using a local dataset, you should provide the local path of the dataset and set the Hugging Face dataset name to None.
 
+# For distributed training using torchrun 
+e.g. running the code on ml.p3.16xlarge instance that has 8 V100 GPUs, NUM_GPUS_YOU_HAVE should be set to 8
+    
+    torchrun --nproc_per_node=NUM_GPUS_YOU_HAVE main.py --model-type bart --teacher facebook/bart-base  --dataset samsum --dataset-input-column source --dataset-target-column target --output-dir /path/to/output/dir
 
 ## Dependencies
 

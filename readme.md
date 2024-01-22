@@ -9,6 +9,26 @@ The loss function used for distillation is a combination of Cross Entropy loss a
 Weighted Loss Function 
     loss = alpha * student_loss + (1 - alpha) * kl_divergence_loss
 
+## Arguments
+
+Here is a brief explanation of the arguments:
+
+--model-type: The type of the model. Currently, only 'bart' and 't5' are supported.
+--teacher: The Hugging Face model name of the teacher model.
+--teacher-local-path: The local path of the teacher model.
+--custom-tokenizer-local-path: The local path of the custom tokenizer.
+--num-encoder-layers: The number of encoder layers in the student model.
+--num-decoder-layers: The number of decoder layers in the student model.
+--hidden-dim: The hidden dimensions of the student model.
+--vocab-size: The vocabulary size of the student model.
+--dataset: The Hugging Face dataset name.
+--dataset-input-column: The input column name in the dataset.
+--dataset-target-column: The target column name in the dataset.
+--dataset-local-path: The local path of the dataset.
+--output-dir: The output directory of the distilled model.  
+
+Please note that if you are using a custom trained model, you should provide the local path of the model and set the corresponding Hugging Face model name to None. Similarly, if you are using a local dataset, you should provide the local path of the dataset and set the Hugging Face dataset name to None.
+
 ## How to Run
 
 The main script for this project is Seq2SeqDistill/main.py. You can run this script from the command line with various arguments to specify the details of the distillation process.
@@ -32,25 +52,6 @@ Here are some examples:
 ### Distilling a custom trained BART model with custom trained tokenizer
     python main.py --model-type bart --teacher facebook/bart-base --teacher-local-path /path/to/teacher/model --custom-tokenizer-local-path /path/to/custom/tokenizer --dataset samsum --dataset-input-column source --dataset-target-column target --output-dir /path/to/output/dir
 
-## Arguments
-
-Here is a brief explanation of the arguments:
-
---model-type: The type of the model. Currently, only 'bart' and 't5' are supported.
---teacher: The Hugging Face model name of the teacher model.
---teacher-local-path: The local path of the teacher model.
---custom-tokenizer-local-path: The local path of the custom tokenizer.
---num-encoder-layers: The number of encoder layers in the student model.
---num-decoder-layers: The number of decoder layers in the student model.
---hidden-dim: The hidden dimensions of the student model.
---vocab-size: The vocabulary size of the student model.
---dataset: The Hugging Face dataset name.
---dataset-input-column: The input column name in the dataset.
---dataset-target-column: The target column name in the dataset.
---dataset-local-path: The local path of the dataset.
---output-dir: The output directory of the distilled model.  
-
-Please note that if you are using a custom trained model, you should provide the local path of the model and set the corresponding Hugging Face model name to None. Similarly, if you are using a local dataset, you should provide the local path of the dataset and set the Hugging Face dataset name to None.
 
 # For distributed training using torchrun 
 e.g. running the code on ml.p3.16xlarge instance that has 8 V100 GPUs, NUM_GPUS_YOU_HAVE should be set to 8

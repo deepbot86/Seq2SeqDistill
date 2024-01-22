@@ -66,27 +66,27 @@ The main script for this project is Seq2SeqDistill/main.py. You can run this scr
 Here are some examples:
 
 ### Distilling a BART model from Hugging Face
-    python main.py --model-type bart --teacher facebook/bart-base --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 50265 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path None --output-dir ./distilled_model
+    python src/seq2seqdistill/main.py --model-type bart --teacher facebook/bart-base --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 50265 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path None --output-dir ./distilled_model
 
 ### Distilling a T5 model from Hugging Face
-    python main.py --model-type t5 --teacher t5-base --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 32128 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path None --output-dir ./distilled_model
+    python src/seq2seqdistill/main.py --model-type t5 --teacher t5-base --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 32128 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path None --output-dir ./distilled_model
 
 ### Distilling a custom trained BART model
 
-    python main.py --model-type bart --teacher-local-path /path/to/teacher/model --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 50265 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path /path/to/dataset --output-dir ./distilled_model
+    python src/seq2seqdistill/main.py --model-type bart --teacher-local-path /path/to/teacher/model --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 50265 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path /path/to/dataset --output-dir ./distilled_model
 
 ### Distilling a custom trained T5 model
 
-    python main.py --model-type t5 --teacher-local-path /path/to/teacher/model --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 32128 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path /path/to/dataset --output-dir ./distilled_model
+    python src/seq2seqdistill/main.py --model-type t5 --teacher-local-path /path/to/teacher/model --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 32128 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path /path/to/dataset --output-dir ./distilled_model
 
 ### Distilling a custom trained BART model with custom trained tokenizer
-    python main.py --model-type bart --teacher facebook/bart-base --teacher-local-path /path/to/teacher/model --custom-tokenizer-local-path /path/to/custom/tokenizer --dataset samsum --dataset-input-column dialogue --dataset-target-column summary --output-dir /path/to/output/dir
+    python src/seq2seqdistill/main.py --model-type bart --teacher facebook/bart-base --teacher-local-path /path/to/teacher/model --custom-tokenizer-local-path /path/to/custom/tokenizer --dataset samsum --dataset-input-column dialogue --dataset-target-column summary --output-dir /path/to/output/dir
 
 
 # For distributed training using torchrun 
 e.g. running the code on ml.p3.16xlarge instance that has 8 V100 GPUs, NUM_GPUS_YOU_HAVE should be set to 8
     
-    torchrun --nproc_per_node=NUM_GPUS_YOU_HAVE main.py --model-type bart --teacher facebook/bart-base  --dataset samsum --dataset-input-column dialogue --dataset-target-column summary --output-dir /path/to/output/dir
+    torchrun --nproc_per_node=NUM_GPUS_YOU_HAVE src/seq2seqdistill/main.py --model-type bart --teacher facebook/bart-base  --dataset samsum --dataset-input-column dialogue --dataset-target-column summary --output-dir /path/to/output/dir
 
 ## Dependencies
 

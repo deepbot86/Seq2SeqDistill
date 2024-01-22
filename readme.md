@@ -29,6 +29,9 @@ Here are some examples:
 
     python main.py --model-type t5 --teacher-local-path /path/to/teacher/model --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 32128 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path /path/to/dataset --output-dir ./distilled_model
 
+### Distilling a custom trained BART model with custom trained tokenizer
+    python main.py --model-type bart --teacher facebook/bart-base --teacher-local-path /path/to/teacher/model --custom-tokenizer-local-path /path/to/custom/tokenizer --dataset samsum --dataset-input-column source --dataset-target-column target --output-dir /path/to/output/dir
+
 ## Arguments
 
 Here is a brief explanation of the arguments:
@@ -36,6 +39,7 @@ Here is a brief explanation of the arguments:
 --model-type: The type of the model. Currently, only 'bart' and 't5' are supported.
 --teacher: The Hugging Face model name of the teacher model.
 --teacher-local-path: The local path of the teacher model.
+--custom-tokenizer-local-path: The local path of the custom tokenizer.
 --num-encoder-layers: The number of encoder layers in the student model.
 --num-decoder-layers: The number of decoder layers in the student model.
 --hidden-dim: The hidden dimensions of the student model.

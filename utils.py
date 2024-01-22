@@ -62,7 +62,7 @@ def load_tokenizer(model_type: str, local_path: str, model_name: str) -> AutoTok
         else:
             tokenizer = AutoTokenizer.from_pretrained(model_name)
     else:
-        raise ValueError('model_type must be bart or t5')
+        raise ValueError('both custom_tokenizer_local_path and teacher model cannot be None')
     return tokenizer
 
 def load_distill_dataset(dataset_name: str, local_path: str, dataset_data_type: str):

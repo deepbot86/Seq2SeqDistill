@@ -1,5 +1,6 @@
 import argparse
 from seq2seq_distill_trainer import Seq2SeqDistillTrainer
+from utils import load_teacher_model, load_student_model, load_tokenizer, load_distill_dataset
 
 if __name__ == '__main__':
     # Create the parser
@@ -28,8 +29,11 @@ if __name__ == '__main__':
     parser.add_argument('--log-interval', type=int, default=10, help='log interval for training')
     parser.add_argument('--gradient-accumulation', type=bool, default=True, help='gradient accumulation for training')
     parser.add_argument('--optimizer', type=str, default='adamw_torch', help='optimizer for training')
+    parser.add_argument("--local-rank", type=int, default=0)
     # Parse the arguments
     args = parser.parse_args()
-    seq2seq_trainer = Seq2SeqDistillTrainer(args)
+    # covert arguments to dict
+    args_dict = vars(args)
+    seq2seq_trainer = Seq2SeqDistillTrainer(args_dict)
     seq2seq_trainer.train()
 

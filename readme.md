@@ -39,7 +39,7 @@ Here is a brief explanation of the arguments:
     --optimizer: The optimizer for training. Default is 'adamw_torch'.
     
 
-Please note that if you are using a custom trained model, you should provide the local path of the model and set the corresponding Hugging Face model name to None. Similarly, if you are using a local dataset, you should provide the local path of the dataset and set the Hugging Face dataset name to None.
+Please note that if you are using a custom trained model, you should provide the local path of the model. Similarly, if you are using a local dataset(or custom tokenizer), you should provide the local path of the dataset(tokenizer). 
 
 ## How to Run
 

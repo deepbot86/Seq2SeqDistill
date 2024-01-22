@@ -13,19 +13,31 @@ Weighted Loss Function
 
 Here is a brief explanation of the arguments:
 
---model-type: The type of the model. Currently, only 'bart' and 't5' are supported.
---teacher: The Hugging Face model name of the teacher model.
---teacher-local-path: The local path of the teacher model.
---custom-tokenizer-local-path: The local path of the custom tokenizer.
---num-encoder-layers: The number of encoder layers in the student model.
---num-decoder-layers: The number of decoder layers in the student model.
---hidden-dim: The hidden dimensions of the student model.
---vocab-size: The vocabulary size of the student model.
---dataset: The Hugging Face dataset name.
---dataset-input-column: The input column name in the dataset.
---dataset-target-column: The target column name in the dataset.
---dataset-local-path: The local path of the dataset.
---output-dir: The output directory of the distilled model.  
+    
+    --model-type: The type of the model. Currently, only 'bart' and 't5' for conditional generation are supported. This argument is required.
+    --teacher: The name of the teacher model, e.g., 'facebook/bart-base', 't5-base'.
+    --num-encoder-layers: The number of encoder layers in the student model. Default is 3.
+    --num-decoder-layers: The number of decoder layers in the student model. Default is 3.
+    --hidden-dim: The hidden dimensions of the student model. Default is 512.
+    --vocab-size: The vocab size of the student model. Default is 50265.
+    --teacher-local-path: The local path of the teacher model.
+    --custom-tokenizer-local-path: The local path of the custom tokenizer.
+    --dataset: The name of the dataset, e.g., 'cnn_dailymail', 'samsum'.
+    --dataset-input-column: The name of the input column in the dataset. This argument is required.
+    --dataset-target-column: The name of the target column in the dataset. This argument is required.
+    --dataset-local-path: The local path of the dataset.
+    --dataset-data-type: The data type of the dataset, e.g., 'csv', 'json'. Required if using a local dataset path.
+    --output-dir: The output path of the distilled student model.
+    --max_length: The maximum length of the input sequence. Default is 512.
+    --batch-size: The batch size for training. Default is 32.
+    --epochs: The number of epochs for training. Default is 3.
+    --learning-rate: The learning rate for training. Default is 5e-5.
+    --fp16: Whether to use fp16 for training. Default is True.
+    --seed: The random seed for training. Default is 42.
+    --log-interval: The log interval for training. Default is 10.
+    --gradient-accumulation: Whether to use gradient accumulation for training. Default is True.
+    --optimizer: The optimizer for training. Default is 'adamw_torch'.
+    
 
 Please note that if you are using a custom trained model, you should provide the local path of the model and set the corresponding Hugging Face model name to None. Similarly, if you are using a local dataset, you should provide the local path of the dataset and set the Hugging Face dataset name to None.
 

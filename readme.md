@@ -4,12 +4,16 @@ This project is designed for Task Specific distillation of large Seq2Seq models 
 
 The main.py script uses the DistillationTrainer class from the HuggingFace Transformers library to train a sequence-to-sequence model using knowledge distillation. It supports both BART and T5 models.
 
+## Github Link 
+
+https://github.com/deepbot86/Seq2SeqDistill/tree/main
+
 ### Loss Function
 The loss function used for distillation is a combination of Cross Entropy loss and KL Divergence loss. Cross Entropy loss measures the performance of a classification model whose output is a probability value between 0 and 1. KL Divergence loss measures how one probability distribution diverges from a second, expected probability distribution.
 Weighted Loss Function 
     loss = alpha * student_loss + (1 - alpha) * kl_divergence_loss
 
-## Installation
+## Using The Package 
 
     pip install seq2seqdistill
 
@@ -24,6 +28,38 @@ Weighted Loss Function
     training_args["output_dir"] = "distilled_bart_model_test"
     distiller = Seq2SeqDistillTrainer(training_args)
     distiller.train()
+
+
+## How to Run After Cloning Github Repo
+    
+    git clone https://github.com/deepbot86/Seq2SeqDistill.git
+
+The main script for this project is Seq2SeqDistill/main.py. You can run this script from the command line with various arguments to specify the details of the distillation process. This script ha sbeen tested on samsum dataset for finetuning BART Base model on an AWS ml.p3.24xlarge instance (8 V100 GPUs) using torchrun. The distilled student model had 3 encoder and 3 decoder layers.  
+
+Here are some examples:
+
+### Distilling a BART model from Hugging Face
+    python src/seq2seqdistill/main.py --model-type bart --teacher facebook/bart-base --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 50265 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path None --output-dir ./distilled_model
+
+### Distilling a T5 model from Hugging Face
+    python src/seq2seqdistill/main.py --model-type t5 --teacher t5-base --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 32128 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path None --output-dir ./distilled_model
+
+### Distilling a custom trained BART model
+
+    python src/seq2seqdistill/main.py --model-type bart --teacher-local-path /path/to/teacher/model --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 50265 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path /path/to/dataset --output-dir ./distilled_model
+
+### Distilling a custom trained T5 model
+
+    python src/seq2seqdistill/main.py --model-type t5 --teacher-local-path /path/to/teacher/model --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 32128 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path /path/to/dataset --output-dir ./distilled_model
+
+### Distilling a custom trained BART model with custom trained tokenizer
+    python src/seq2seqdistill/main.py --model-type bart --teacher facebook/bart-base --teacher-local-path /path/to/teacher/model --custom-tokenizer-local-path /path/to/custom/tokenizer --dataset samsum --dataset-input-column dialogue --dataset-target-column summary --output-dir /path/to/output/dir
+
+
+# For distributed training using torchrun 
+e.g. running the code on ml.p3.16xlarge instance that has 8 V100 GPUs, NUM_GPUS_YOU_HAVE should be set to 8
+    
+    torchrun --nproc_per_node=NUM_GPUS_YOU_HAVE src/seq2seqdistill/main.py --model-type bart --teacher facebook/bart-base  --dataset samsum --dataset-input-column dialogue --dataset-target-column summary --output-dir /path/to/output/dir
 
 ## Arguments
 
@@ -56,37 +92,6 @@ e.g. "model-type" to "model_type"):
     
 
 Please note that if you are using a custom trained model, you should provide the local path of the model. Similarly, if you are using a local dataset(or custom tokenizer), you should provide the local path of the dataset(tokenizer). 
-
-## How to Run After Cloning Github Repo
-    
-    git clone https://github.com/deepbot86/Seq2SeqDistill.git
-
-The main script for this project is Seq2SeqDistill/main.py. You can run this script from the command line with various arguments to specify the details of the distillation process. This script ha sbeen tested on samsum dataset for finetuning BART Base model on an AWS ml.p3.24xlarge instance (8 V100 GPUs) using torchrun. The distilled student model had 3 encoder and 3 decoder layers.  
-
-Here are some examples:
-
-### Distilling a BART model from Hugging Face
-    python src/seq2seqdistill/main.py --model-type bart --teacher facebook/bart-base --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 50265 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path None --output-dir ./distilled_model
-
-### Distilling a T5 model from Hugging Face
-    python src/seq2seqdistill/main.py --model-type t5 --teacher t5-base --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 32128 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path None --output-dir ./distilled_model
-
-### Distilling a custom trained BART model
-
-    python src/seq2seqdistill/main.py --model-type bart --teacher-local-path /path/to/teacher/model --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 50265 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path /path/to/dataset --output-dir ./distilled_model
-
-### Distilling a custom trained T5 model
-
-    python src/seq2seqdistill/main.py --model-type t5 --teacher-local-path /path/to/teacher/model --num-encoder-layers 3 --num-decoder-layers 3 --hidden-dim 512 --vocab-size 32128 --dataset cnn_dailymail --dataset-input-column article --dataset-target-column highlights --dataset-local-path /path/to/dataset --output-dir ./distilled_model
-
-### Distilling a custom trained BART model with custom trained tokenizer
-    python src/seq2seqdistill/main.py --model-type bart --teacher facebook/bart-base --teacher-local-path /path/to/teacher/model --custom-tokenizer-local-path /path/to/custom/tokenizer --dataset samsum --dataset-input-column dialogue --dataset-target-column summary --output-dir /path/to/output/dir
-
-
-# For distributed training using torchrun 
-e.g. running the code on ml.p3.16xlarge instance that has 8 V100 GPUs, NUM_GPUS_YOU_HAVE should be set to 8
-    
-    torchrun --nproc_per_node=NUM_GPUS_YOU_HAVE src/seq2seqdistill/main.py --model-type bart --teacher facebook/bart-base  --dataset samsum --dataset-input-column dialogue --dataset-target-column summary --output-dir /path/to/output/dir
 
 ## Dependencies
 
